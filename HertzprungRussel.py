@@ -7,7 +7,6 @@ Created on Tue Nov 28 21:09:52 2023
 
 import numpy as np
 import matplotlib.pyplot as plt
-import statistics as stat
 import sys
 
 def single_histogram(num,num1,string):
@@ -20,7 +19,7 @@ def single_histogram(num,num1,string):
         xbin[i] = (xc[i+1]+xc[i])*0.5
     ax2.hist(xbin, bins=nb, weights=counts, histtype='step', density=True, lw=3, label=string)
 
-#path = input('inserisci path: ')
+#download file con i dati come parametro di input dal programma bash
 filename = str(sys.argv[1])
 data = np.loadtxt(filename, delimiter=' ', usecols=(0, 1, 4, 8, 12), unpack=True)
 MsuH0 = data[0]
@@ -29,7 +28,7 @@ mabs0 = data[2]
 mb_y0 = data[3]
 age0 = data[4]
 
-#Trasforma le liste in arrays
+#Trasformo le liste in arrays
 MsuH = np.array(MsuH0)
 m_ini = np.array(m_ini0)
 mabs = np.array(mabs0)
@@ -70,9 +69,12 @@ mask28 = (age>=0.00) & (age<1.00)
 mask29 = (age>=1.00) & (age<5.00)
 mask30 = (age>=5.00) & (age<14.00)
 
+#creo tre grafici su tre diverse figure
 fig1, (ax1) = plt.subplots()
 fig2, (ax2) = plt.subplots()
 fig2, (ax3) = plt.subplots()
+
+#primo grafico: diagramma di Hertzprung-Russel
 ax1.plot(mb_y[mask], mabs[mask], '.', markersize=3, label='0.00 Gyr - 0.50 Gyr')
 ax1.plot(mb_y[mask1], mabs[mask1], '.', markersize=3, label='0.50 Gyr - 1.00 Gyr')
 ax1.plot(mb_y[mask2], mabs[mask2], '.', markersize=3, label='1.00 Gyr - 1.50 Gyr')
@@ -108,6 +110,7 @@ ax1.set_ylabel('Mv')
 ax1.legend(fontsize='xx-small', loc='center right')
 ax1.set_title('Hertzprung-Russel diagram')
 
+#secondo grafico: istogrammi delle tre popolazioni sovrapposti
 single_histogram(0.00,1.00,'age under 1 Gyr')
 single_histogram(1.00,5.00,'age between 1 Gyr and 5 Gyr')
 single_histogram(5.00,14.00,'age over 5 Gyr')
@@ -125,6 +128,7 @@ ax2.legend(fontsize='small', loc='best')
 ax2.set_title('Distribution of MsuH at different ages')
 ax2.grid()
 
+#terzo grafico: metallicità stellare in funzione della massa iniziale
 ax3.plot(m_ini[mask28], MsuH[mask28], '.', markersize=1.5, label='age under 1 Gyr')
 ax3.plot(m_ini[mask29], MsuH[mask29], '.', markersize=1.5, label='age between 1 Gyr and 5 Gyr')
 ax3.plot(m_ini[mask30], MsuH[mask30], '.', markersize=1.5, label='age over 5 Gyr')
